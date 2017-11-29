@@ -48,8 +48,8 @@ public class TestDEPQueue01
         // Parameters for this test run.
         
         Random rand = new Random(12345);
-        int tests = 100;           // Number of tests to run.
-        int peakSize = 10;         // Target heap size half way through the tests.
+        int tests = 10_000_000;           // Number of tests to run.
+        int peakSize = 500_000;         // Target heap size half way through the tests.
         boolean debugging = false; // Change to true for more debugging output.                
        
         // Statistics.

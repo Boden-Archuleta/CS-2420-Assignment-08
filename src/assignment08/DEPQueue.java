@@ -35,49 +35,21 @@ public class DEPQueue {
 		comparisonCount = 0;
 		swapCount = 0;
 		size = 0;
-		minHeap = new ArrayList<>();
-		maxHeap = new ArrayList<>();
+		minHeap = new ArrayList<Node>();
+		maxHeap = new ArrayList<Node>();
 	}
 	
 	public  void  insert (String data){
 		Node newNode = new Node(data);
 		this.size++;
-		insertInMin(newNode);
-		insertInMax(newNode);
-	}
-	
-	private void insertInMin(Node newNode){
+		
 		minHeap.add(newNode);
 		newNode.updateMin(minHeap.size() - 1);
-		
 		minRecurseUp(newNode.minHeapIndex);
 		
-//		while(newNode.minHeapIndex != 0){
-//			this.comparisonCount++;
-//			int parentIndex = (newNode.minHeapIndex - 1) / 2;
-//			
-//			if (newNode.data.compareTo(minHeap.get(parentIndex).data) < 0)
-//				swapMin(parentIndex, newNode.minHeapIndex);
-//			else 
-//				break;
-//		}
-	}
-	
-	private void insertInMax(Node newNode){
 		maxHeap.add(newNode);
 		newNode.updateMax(maxHeap.size() - 1);
-		
-		maxRecurseUp(newNode.maxHeapIndex);
-				
-//		while(newNode.maxHeapIndex != 0){
-//			this.comparisonCount++;
-//			int parentIndex = (newNode.maxHeapIndex - 1) / 2;
-//					
-//			if (newNode.data.compareTo(maxHeap.get(parentIndex).data) > 0)
-//				swapMax(parentIndex, newNode.maxHeapIndex);
-//			else 
-//				break;
-//		}
+		maxRecurseUp(newNode.maxHeapIndex);		
 	}
 	
 	private void swapMin(int greaterIndex, int lesserIndex){
@@ -136,7 +108,7 @@ public class DEPQueue {
 		
 		//remove from max heap
 		swapMax(0, maxHeap.size() - 1);
-		maxHeap.remove(minHeap.size() - 1);
+		maxHeap.remove(maxHeap.size() - 1);
 		fixMaxHeap(0);
 		
 		//remove from min heap
@@ -145,7 +117,7 @@ public class DEPQueue {
 		}
 		else {
 			swapMin(index, minHeap.size() - 1);
-			maxHeap.remove(maxHeap.size() - 1);
+			minHeap.remove(minHeap.size() - 1);
 			fixMinHeap(index);
 		}
 		
@@ -171,13 +143,12 @@ public class DEPQueue {
 		int right = root * 2 + 2;
 		int min = root;
 		
-		if (left < this.size && minHeap.get(left).data.compareTo(minHeap.get(root).data) < 0){
+		this.comparisonCount += 2;
+		if (left < minHeap.size() && minHeap.get(left).data.compareTo(minHeap.get(root).data) < 0){
 			min = left;
-			this.comparisonCount++;
 		}
-		if (right < this.size && minHeap.get(right).data.compareTo(minHeap.get(root).data) < 0){
+		if (right < minHeap.size() && minHeap.get(right).data.compareTo(minHeap.get(min).data) < 0){
 			min = right;
-			this.comparisonCount++;
 		}
 		
 		if (min != root){
@@ -191,11 +162,11 @@ public class DEPQueue {
 		int right = root * 2 + 2;
 		int min = root;
 		
-		if (left < this.size && maxHeap.get(left).data.compareTo(maxHeap.get(root).data) > 0){
+		if (left < maxHeap.size() && maxHeap.get(left).data.compareTo(maxHeap.get(root).data) > 0){
 			min = left;
 			this.comparisonCount++;
 		}
-		if (right < this.size && maxHeap.get(right).data.compareTo(maxHeap.get(root).data) > 0){
+		if (right < maxHeap.size() && maxHeap.get(right).data.compareTo(maxHeap.get(min).data) > 0){
 			min = right;
 			this.comparisonCount++;
 		}

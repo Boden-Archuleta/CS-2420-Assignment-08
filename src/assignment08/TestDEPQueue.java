@@ -19,10 +19,33 @@ public class TestDEPQueue {
 	@Test
 	public void testAdding() {
 		DEPQueue list = new DEPQueue();
-		list.insert("b");
-		list.insert("c");
-		list.insert("a");
-		
+		list.insert("8");
+		list.insert("5");
+		list.insert("3");
+		list.insert("9");
+		list.insert("1");
+		list.insert("2");
+		list.insert("4");
+		list.insert("6");
+		list.insert("7");
+
+		//list.printList();
+	}
+	
+	@Test
+	public void testRemove(){
+		DEPQueue list = new DEPQueue();
+		list.insert("2");
+		list.insert("3");
+		list.insert("5");
+		list.insert("7");
+		list.insert("6");
+		list.insert("1");
+		list.insert("4");
+		list.insert("9");
+		list.insert("8");
+
+		System.out.println(list.removeMax());
 		list.printList();
 	}
 
