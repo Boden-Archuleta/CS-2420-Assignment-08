@@ -3,8 +3,15 @@ package assignment08;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
+/**
+ * @author Boden Archuleta
+ *
+ */
 public class DEPQueue {
 	
+	/*
+	 * Node class used to store data values in both heaps
+	 */
 	private class Node {
 		private String data;
 		private int minHeapIndex;
@@ -16,11 +23,11 @@ public class DEPQueue {
 			maxHeapIndex = 0;
 		}
 		
-		public void updateMin(int index){
+		public void updateMinHeapIndex(int index){
 			minHeapIndex = index;
 		}
 		
-		public void updateMax(int index){
+		public void updateMaxHeapIndex(int index){
 			maxHeapIndex = index;
 		}
 	}
@@ -31,6 +38,7 @@ public class DEPQueue {
 	private ArrayList<Node> minHeap;
 	private ArrayList<Node> maxHeap;
 	
+	
 	DEPQueue(){
 		comparisonCount = 0;
 		swapCount = 0;
@@ -39,42 +47,65 @@ public class DEPQueue {
 		maxHeap = new ArrayList<Node>();
 	}
 	
+	/**
+	 * Inserts a string into both heaps
+	 * 
+	 * @param data 
+	 * 			The string that will be inserted into the heaps
+	 */
 	public  void  insert (String data){
 		Node newNode = new Node(data);
 		this.size++;
 		
 		minHeap.add(newNode);
-		newNode.updateMin(minHeap.size() - 1);
+		newNode.updateMinHeapIndex(minHeap.size() - 1);
 		minRecurseUp(newNode.minHeapIndex);
 		
 		maxHeap.add(newNode);
-		newNode.updateMax(maxHeap.size() - 1);
+		newNode.updateMaxHeapIndex(maxHeap.size() - 1);
 		maxRecurseUp(newNode.maxHeapIndex);		
 	}
 	
+	/**
+	 * Helper method that switches the nodes at the given indices
+	 * in the minHeap and updates the index fields of both nodes
+	 * @param greaterIndex
+	 * @param lesserIndex
+	 */
 	private void swapMin(int greaterIndex, int lesserIndex){
 		Node temp = minHeap.get(lesserIndex);
 		minHeap.set(lesserIndex, minHeap.get(greaterIndex));
 		minHeap.set(greaterIndex, temp);
 		
-		minHeap.get(greaterIndex).updateMin(greaterIndex);
-		minHeap.get(lesserIndex).updateMin(lesserIndex);
+		minHeap.get(greaterIndex).updateMinHeapIndex(greaterIndex);
+		minHeap.get(lesserIndex).updateMinHeapIndex(lesserIndex);
 		this.swapCount++;
 	}
 	
+	/**
+	 * Helper function that switches the nodes at the given indices 
+	 * in the maxHeap. Also updates the index fields in both nodes. 
+	 * @param greaterIndex
+	 * @param lesserIndex
+	 */
 	private void swapMax(int greaterIndex, int lesserIndex){
 		Node temp = maxHeap.get(lesserIndex);
 		maxHeap.set(lesserIndex, maxHeap.get(greaterIndex));
 		maxHeap.set(greaterIndex, temp);
 		
-		maxHeap.get(greaterIndex).updateMax(greaterIndex);
-		maxHeap.get(lesserIndex).updateMax(lesserIndex);
+		maxHeap.get(greaterIndex).updateMaxHeapIndex(greaterIndex);
+		maxHeap.get(lesserIndex).updateMaxHeapIndex(lesserIndex);
 		this.swapCount++;
 	}
 	
+	/**
+	 * Removes the highest priority string from the queue
+	 * @return
+	 * 			Returns the removed string
+	 */
 	public String removeMin(){
 		if (maxHeap.isEmpty() || minHeap.isEmpty())
-			throw new NoSuchElementException("Tried to remove an element from an empty list");
+			throw new NoSuchElementException();
 		
 		this.size--;
 		String returnData = minHeap.get(0).data;
@@ -98,6 +129,11 @@ public class DEPQueue {
 		return returnData;
 	}
 	
+	/**
+	 * Removes the lowest priority string from the queue
+	 * @return
+	 * 			Returns the removed string
+	 */
 	public String removeMax(){
 		if (maxHeap.isEmpty() || minHeap.isEmpty())
 			throw new NoSuchElementException("Tried to remove an element from an empty list");
@@ -124,6 +160,12 @@ public class DEPQueue {
 		return returnData;
 	}
 	
+	/**
+	 * If the given index is the root, the recurse down method is called
+	 * if the given index is a leaf node, the recurse up method is called
+	 * @param index
+	 * 			index of a node in the minHeap
+	 */
 	private void fixMinHeap(int index){
 		if (index == 0)
 			minRecurseDown(index);
@@ -131,6 +173,12 @@ public class DEPQueue {
 			minRecurseUp(index);
 	}
 	
+	/**
+	 * If the given index is the root, the recurse down method is called
+	 * if the given index is a leaf node, the recurse up method is called
+	 * @param index
+	 * 			index of a node in the minHeap
+	 */
 	private void fixMaxHeap(int index){
 		if (index == 0)
 			maxRecurseDown(index);
@@ -138,6 +186,11 @@ public class DEPQueue {
 			maxRecurseUp(index);
 	}
 	
+	/**
+	 * Recursively updates the minHeap starting at a root node and moving down
+	 * @param root
+	 * 			A root of a subtree
+	 */
 	private void minRecurseDown(int root){
 		int left = root * 2 + 1;
 		int right = root * 2 + 2;
@@ -157,18 +210,22 @@ public class DEPQueue {
 		}
 	}
 	
+	/**
+	 * Recursively updates the maxHeap starting at a root and moving down
+	 * @param root
+	 * 			A root of a subtree
+	 */
 	private void maxRecurseDown(int root){
 		int left = root * 2 + 1;
 		int right = root * 2 + 2;
 		int min = root;
 		
+		this.comparisonCount += 2;
 		if (left < maxHeap.size() && maxHeap.get(left).data.compareTo(maxHeap.get(root).data) > 0){
 			min = left;
-			this.comparisonCount++;
 		}
 		if (right < maxHeap.size() && maxHeap.get(right).data.compareTo(maxHeap.get(min).data) > 0){
 			min = right;
-			this.comparisonCount++;
 		}
 		
 		if (min != root){
@@ -177,6 +234,11 @@ public class DEPQueue {
 		}
 	}
 	
+	/**
+	 * Recursively updates the maxHeap starting from a leaf node and moving up
+	 * @param current
+	 * 			Index of the current node
+	 */
 	private void maxRecurseUp(int current){
 		int parent = (current - 1) / 2;
 		if (parent < 0)
@@ -189,6 +251,11 @@ public class DEPQueue {
 		}
 	}
 	
+	/**
+	 * Recursively updates the maxHeap starting from a leaf node and moving up
+	 * @param current
+	 * 			Index of the current node
+	 */
 	private void minRecurseUp(int current){
 		int parent = (current - 1) / 2;
 		if (parent < 0)
@@ -213,7 +280,11 @@ public class DEPQueue {
 		return this.swapCount;
 	}
 	
-	public void printList(){
+	/**
+	 * helper method for debugging. Prints the string and index fields of 
+	 * every node in both heaps. Make public to use in testing.
+	 */
+	private void printList(){
 		System.out.println("MinHeap:");
 		for (Node n : minHeap){
 			System.out.println("data: " + n.data + " minIndex: " + n.minHeapIndex + " maxIndex " + n.maxHeapIndex);

@@ -46,7 +46,7 @@ public class TestDEPQueue {
 		list.insert("8");
 
 		System.out.println(list.removeMax());
-		list.printList();
+		//list.printList();
 	}
 
 }
